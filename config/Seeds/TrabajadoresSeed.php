@@ -24,9 +24,9 @@ class TrabajadoresSeed extends AbstractSeed
         
         for ($i = 0; $i < 10; $i++) {
             $data[] = [
-                'nombres' => $faker->text(30),
-                'apellido_paterno' => $faker->text(30),
-                'apellido_materno' => $faker->text(30),
+                'nombres' => $faker->firstNameMale,
+                'apellido_paterno' => $faker->lastName,
+                'apellido_materno' => $faker->lastName,
                 'dni' => $faker->unique()->randomNumber(8),
                 'estado_id' => 1
             ];

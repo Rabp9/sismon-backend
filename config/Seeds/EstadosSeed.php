@@ -22,11 +22,15 @@ class EstadosSeed extends AbstractSeed
         $data = [
             [
                 'descripcion' => 'Habilitado',
-                'table' => '*'
+                'entidad' => '*'
             ],
             [
                 'descripcion' => 'Deshabilitado',
-                'table' => '*'
+                'entidad' => '*'
+            ],
+            [
+                'descripcion' => 'Realizado',
+                'entidad' => 'Tarea'
             ]
         ];
         

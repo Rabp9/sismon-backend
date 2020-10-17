@@ -22,11 +22,11 @@ class ActividadesInterseccionesDetallesSeed extends AbstractSeed
         $faker = Faker\Factory::create();
         $data = [];
         
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i < 300; $i++) {
             $data[] = [
-                'fecha_registro' => $faker->numberBetween(1, 100),
-                'actividad_id' => $faker->numberBetween(1, 100),
-                'interseccion_id' => $faker->numberBetween(1, 300)
+                'fecha_registro' => $faker->date('Y-m-d', 'now'),
+                'actividad_id' => $faker->numberBetween(1, 50),
+                'interseccion_id' => $faker->numberBetween(1, 100)
             ];
         }
         

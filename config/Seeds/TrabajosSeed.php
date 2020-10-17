@@ -22,7 +22,7 @@ class TrabajosSeed extends AbstractSeed
         $faker = Faker\Factory::create();
         $data = [];
         
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $data[] = [
                 'fecha_registro' => $faker->date('Y-m-d', 'now'),
                 'estado_id' => 1

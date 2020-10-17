@@ -24,15 +24,46 @@ class TareasSeed extends AbstractSeed
         
         for ($i = 0; $i < 200; $i++) {
             $data[] = [
-                'descripcion' =>  $faker->numberBetween(1, 100),
-                'dificultad' => $faker->numberBetween(1, 100),
-                'prioridad' => $faker->numberBetween(1, 100),
-                'fecha_registro' => $faker->numberBetween(1, 300),
-                'fecha_programada' => $faker->numberBetween(1, 300),
-                'fecha_realizada' => $faker->numberBetween(1, 300),
-                'actividad_id' => $faker->ipv4,
-                'trabajo_id' => $faker->ipv4,
-                'interseccion_id' => $faker->ipv4,
+                'descripcion' => $faker->text(30),
+                'dificultad' => $faker->randomElement($array = ['ALTA', 'MEDIA', 'BAJA']),
+                'prioridad' => $faker->randomElement($array = ['ALTA', 'MEDIA', 'BAJA']),
+                'fecha_registro' => $faker->date('Y-m-d', 'now'),
+                'fecha_programada' => $faker->date('Y-m-d', 'now'),
+                'fecha_realizada' => $faker->date('Y-m-d', 'now'),
+                'actividad_id' => $faker->numberBetween(1, 50),
+                'trabajo_id' => $faker->numberBetween(1, 100),
+                'interseccion_id' => $faker->numberBetween(1, 100),
+                'estado_id' => 1
+            ];
+        }
+        
+        for ($i = 0; $i < 50; $i++) {
+            $data[] = [
+                'descripcion' => $faker->text(30),
+                'dificultad' => $faker->randomElement($array = ['ALTA', 'MEDIA', 'BAJA']),
+                'prioridad' => $faker->randomElement($array = ['ALTA', 'MEDIA', 'BAJA']),
+                'fecha_registro' => $faker->date('Y-m-d', 'now'),
+                'fecha_programada' => $faker->date('Y-m-d', 'now'),
+                'fecha_realizada' => $faker->date('Y-m-d', 'now'),
+                'actividad_id' => $faker->numberBetween(1, 50),
+                'trabajo_id' => null,
+                'interseccion_id' => $faker->numberBetween(1, 100),
+                'estado_id' => 1
+            ];
+        }
+        
+        for ($i = 0; $i < 20; $i++) {
+            $data[] = [
+                'descripcion' => $faker->text(30),
+                'dificultad' => $faker->randomElement($array = ['ALTA', 'MEDIA', 'BAJA']),
+                'prioridad' => $faker->randomElement($array = ['ALTA', 'MEDIA', 'BAJA']),
+                'fecha_registro' => $faker->date('Y-m-d', 'now'),
+                'fecha_programada' => $faker->date('Y-m-d', 'now'),
+                'fecha_realizada' => $faker->date('Y-m-d', 'now'),
+                'actividad_id' => $faker->numberBetween(1, 50),
+                'trabajo_id' => $faker->numberBetween(1, 100),
+                'interseccion_id' => $faker->numberBetween(1, 100),
+                'estado_id' => 2
             ];
         }
         

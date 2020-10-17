@@ -16,12 +16,10 @@ class DatabaseSeedCommand extends Command
         exec('bin\cake migrations seed --seed TrabajadoresSeed');
         exec('bin\cake migrations seed --seed TrabajosSeed');
         exec('bin\cake migrations seed --seed UsersSeed');
-/*      exec('bin\cake migrations seed --seed Database3Seed');
-        exec('bin\cake migrations seed --seed Database4Seed');
-        exec('bin\cake migrations seed --seed Database5Seed');
-        exec('bin\cake migrations seed --seed Database6Seed');
-        exec('bin\cake migrations seed --seed Database7Seed');
- */
+        exec('bin\cake migrations seed --seed ActividadesSeed');
+        exec('bin\cake migrations seed --seed ActividadesInterseccionesDetallesSeed');
+        exec('bin\cake migrations seed --seed TareasSeed');
+        exec('bin\cake migrations seed --seed TareasTrabajadoresDetallesSeed');
         
         $io->out("¡Seed Completo!");
     }

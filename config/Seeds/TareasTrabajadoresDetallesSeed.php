@@ -22,11 +22,11 @@ class TareasTrabajadoresDetallesSeed extends AbstractSeed
         $faker = Faker\Factory::create();
         $data = [];
         
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i < 500; $i++) {
             $data[] = [
-                'fecha_realizada' => $faker->numberBetween(1, 300),
-                'tarea_id' => $faker->ipv4,
-                'trabajador_id' => $faker->ipv4
+                'fecha_realizada' => $faker->date('Y-m-d', 'now'),
+                'tarea_id' => $faker->numberBetween(1, 200),
+                'trabajador_id' => $faker->numberBetween(1, 10),
             ];
         }
         
