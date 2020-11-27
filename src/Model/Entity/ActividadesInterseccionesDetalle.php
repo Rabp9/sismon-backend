@@ -31,5 +31,7 @@ class ActividadesInterseccionesDetalle extends Entity
         'fecha_registro' => true,
         'actividad' => true,
         'interseccion' => true,
+        'interseccion_id' => true,
+        'actividad_id' => true
     ];
 }

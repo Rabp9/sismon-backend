@@ -21,7 +21,6 @@ use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\BodyParserMiddleware;
-use Cake\Http\Middleware\CsrfProtectionMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
@@ -39,8 +38,7 @@ class Application extends BaseApplication
      *
      * @return void
      */
-    public function bootstrap(): void
-    {
+    public function bootstrap(): void {
         // Call parent to load bootstrap from files.
         parent::bootstrap();
 
@@ -55,7 +53,6 @@ class Application extends BaseApplication
         if (Configure::read('debug')) {
             $this->addPlugin('DebugKit');
         }
-
         // Load more plugins here
     }
 
@@ -65,8 +62,7 @@ class Application extends BaseApplication
      * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue to setup.
      * @return \Cake\Http\MiddlewareQueue The updated middleware queue.
      */
-    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
-    {
+    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue {
         $middlewareQueue
             // Catch any exceptions in the lower layers,
             // and make an error page/response

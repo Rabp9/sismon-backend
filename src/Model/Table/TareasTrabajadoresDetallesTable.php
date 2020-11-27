@@ -47,10 +47,10 @@ class TareasTrabajadoresDetallesTable extends Table
             'foreignKey' => 'tarea_id',
             'joinType' => 'INNER',
         ]);
-        $this->belongsTo('Trabajadores', [
-            'foreignKey' => 'trabajador_id',
-            'joinType' => 'INNER',
-        ]);
+        $this->belongsTo('Trabajadores')
+            ->setForeignKey('trabajador_id')
+            ->setJoinType('INNER')
+            ->setProperty('trabajador');                
     }
 
     /**

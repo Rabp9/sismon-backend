@@ -29,11 +29,12 @@ class Interseccion extends Entity
      * @var array
      */
     protected $_accessible = [
+        'id' => true,
         'descripcion' => true,
         'longitud' => true,
         'latitud' => true,
         'codigo' => true,
         'estado' => true,
-        'estado_id' => true,
+        'estado_id' => true
     ];
 }

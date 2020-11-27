@@ -17,7 +17,47 @@ class ActividadesTiposController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function index() {
-        $actividadesTipos = $this->ActividadesTipos->find();
+        $search = $this->request->getQuery('search');
+        $estado_id = $this->request->getQuery('estado_id');
+        $itemsPerPage = $this->request->getQuery('itemsPerPage');
+        
+        $query = $this->ActividadesTipos->find()->order(['id']);
+
+        if ($search) {
+            $query->where([
+                'ActividadesTipos.descripcion LIKE' => '%' . $search . '%',
+            ]);
+        }
+        
+        if ($estado_id) {
+            $query->where(['ActividadesTipos.estado_id' => $estado_id]);
+        }
+        
+        $count = $query->count();
+        if (!$itemsPerPage) {
+            $itemsPerPage = $count;
+        }
+        $actividadesTipos = $this->paginate($query, [
+            'limit' => $itemsPerPage
+        ]);
+        $paginate = $this->request->getAttribute('paging')['ActividadesTipos'];
+        $pagination = [
+            'totalItems' => $paginate['count'],
+            'itemsPerPage' =>  $paginate['perPage']
+        ];
+        
+        $this->set(compact('actividadesTipos', 'pagination', 'count'));
+        $this->viewBuilder()->setOption('serialize', true);
+    }
+
+    /**
+     * GetList method
+     *
+     * @return \Cake\Http\Response|null|void Renders view
+     */
+    public function getList() {
+        $actividadesTipos = $this->ActividadesTipos->find()->order('descripcion')
+            ->where(['ActividadesTipos.estado_id' => 1]);
 
         $this->set(compact('actividadesTipos'));
         $this->viewBuilder()->setOption('serialize', true);
@@ -43,13 +83,11 @@ class ActividadesTiposController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
-    {
-        $actividadesTipo = $this->ActividadesTipos->get($id, [
-            'contain' => ['Estados'],
-        ]);
+    public function view($id = null) {
+        $actividadesTipo = $this->ActividadesTipos->get($id);
 
         $this->set(compact('actividadesTipo'));
+        $this->viewBuilder()->setOption('serialize', true);
     }
 
     /**
@@ -57,20 +95,19 @@ class ActividadesTiposController extends AppController
      *
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
-    public function add()
-    {
-        $actividadesTipo = $this->ActividadesTipos->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $actividadesTipo = $this->ActividadesTipos->patchEntity($actividadesTipo, $this->request->getData());
-            if ($this->ActividadesTipos->save($actividadesTipo)) {
-                $this->Flash->success(__('The actividades tipo has been saved.'));
+    public function add() {
+        $this->request->allowMethod('POST');
+        $actividadesTipo = $this->ActividadesTipos->newEntity($this->request->getData());
+        $actividadesTipo->estado_id = 1;
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The actividades tipo could not be saved. Please, try again.'));
+        if ($this->ActividadesTipos->save($actividadesTipo)) {
+            $message = 'El tipo de actividad fue registrado correctamente';
+        } else {
+            $message = 'El tipo de actividad no fue registrado correctamente';
+            $errors = $actividadesTipo->getErrors();
         }
-        $estados = $this->ActividadesTipos->Estados->find('list', ['limit' => 200]);
-        $this->set(compact('actividadesTipo', 'estados'));
+        $this->set(compact('actividadesTipo', 'message', 'errors'));
+        $this->viewBuilder()->setOption('serialize', true);
     }
 
     /**
@@ -80,22 +117,18 @@ class ActividadesTiposController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
-    {
-        $actividadesTipo = $this->ActividadesTipos->get($id, [
-            'contain' => [],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $actividadesTipo = $this->ActividadesTipos->patchEntity($actividadesTipo, $this->request->getData());
-            if ($this->ActividadesTipos->save($actividadesTipo)) {
-                $this->Flash->success(__('The actividades tipo has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The actividades tipo could not be saved. Please, try again.'));
+    public function edit($id = null) {
+        $this->request->allowMethod('PUT');
+        $actividadesTipo = $this->ActividadesTipos->patchEntity($this->ActividadesTipos->get($id), $this->request->getData());
+        
+        if ($this->ActividadesTipos->save($actividadesTipo)) {
+            $message = 'El tipo de actividad fue modificado correctamente';
+        } else {
+            $message = 'El tipo de actividad no fue modificado correctamente';
+            $errors = $actividadesTipo->getErrors();
         }
-        $estados = $this->ActividadesTipos->Estados->find('list', ['limit' => 200]);
-        $this->set(compact('actividadesTipo', 'estados'));
+        $this->set(compact('actividadesTipo', 'message', 'errors'));
+        $this->viewBuilder()->setOption('serialize', true);
     }
 
     /**
@@ -116,5 +149,51 @@ class ActividadesTiposController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    
+    /**
+     * Enable method
+     *
+     * @param string|null $id Interseccione id.
+     * @return \Cake\Http\Response|null|void Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function enable() {
+        $this->request->allowMethod('POST');
+        $id = $this->request->getData('id');
+        $actividadesTipo = $this->ActividadesTipos->get($id);
+        $actividadesTipo->estado_id = 1;
+        
+        if ($this->ActividadesTipos->save($actividadesTipo)) {
+            $message = 'El tipo de actividad fue habilitado correctamente';
+        } else {
+            $message = 'El tipo de actividad no fue habilitado correctamente';
+            $errors = $actividadesTipo->getErrors();
+        }
+        $this->set(compact('actividadesTipo', 'message', 'errors'));
+        $this->viewBuilder()->setOption('serialize', true);
+    }
+    
+    /**
+     * Disable method
+     *
+     * @param string|null $id Interseccione id.
+     * @return \Cake\Http\Response|null|void Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function disable() {
+        $this->request->allowMethod('POST');
+        $id = $this->request->getData('id');
+        $actividadesTipo = $this->ActividadesTipos->get($id);
+        $actividadesTipo->estado_id = 2;
+        
+        if ($this->ActividadesTipos->save($actividadesTipo)) {
+            $message = 'El tipo de actividad fue fue deshabilitado correctamente';
+        } else {
+            $message = 'El tipo de actividad no fue deshabilitado correctamente';
+            $errors = $actividadesTipo->getErrors();
+        }
+        $this->set(compact('actividadesTipo', 'message', 'errors'));
+        $this->viewBuilder()->setOption('serialize', true);
     }
 }

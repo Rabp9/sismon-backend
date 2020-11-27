@@ -129,6 +129,14 @@ class TrabajosController extends AppController
                 'Tareas.id IN' => $tareasIds
             ]);
             $this->Trabajos->Tareas->TareasTrabajadoresDetalles->saveManyOrFail($tareasTrabajadoresDetalles);
+            $actividades = $this->Trabajos->Tareas->Actividades->find()->where(['Actividades.estado_id' => 1]);
+            foreach ($actividades as $actividad) {
+                $cantidadTareasPendientes = $this->Trabajos->Tareas->find()->where(['Tareas.actividad_id' => $actividad->id, 'Tareas.estado_id' => 1])->count();
+                if ($cantidadTareasPendientes == 0) {
+                    $actividad->estado_id = 3;
+                    $this->Trabajos->Tareas->Actividades->saveOrFail($actividad);
+                }
+            }
             $message = 'El trabajo fue registrado correctamente';
             
             $this->Trabajos->getConnection()->commit();

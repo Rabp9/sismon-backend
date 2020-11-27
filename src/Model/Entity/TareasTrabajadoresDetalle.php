@@ -14,7 +14,7 @@ use Cake\ORM\Entity;
  * @property int $trabajador_id
  *
  * @property \App\Model\Entity\Tarea $tarea
- * @property \App\Model\Entity\Trabajadore $trabajadore
+ * @property \App\Model\Entity\Trabajador $trabajador
  */
 class TareasTrabajadoresDetalle extends Entity
 {

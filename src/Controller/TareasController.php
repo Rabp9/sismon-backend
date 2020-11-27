@@ -25,18 +25,36 @@ class TareasController extends AppController
     }
 
     /**
-     * getEnabled method
+     * GetByActividad method
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function getByActividad($actividad_id) {
-        $this->request->allowMethod(['GET']);
+    public function getPendientesByActividad() {
+        $actividad_id = $this->request->getParam('actividad_id');
         $tareas = $this->Tareas->find()
-            ->where(['Tareas.actividad_id' => $actividad_id, 'Tareas.estado_id' => 1]);
+            ->contain(['Intersecciones'])
+            ->where(['Tareas.actividad_id' => $actividad_id, 'Tareas.estado_id' => 1, 'Tareas.trabajo_id IS' => null]);
 
         $this->set(compact('tareas'));
         $this->viewBuilder()->setOption('serialize', true);
     }
+    
+    /**
+     * GetRealizadasByActividad method
+     *
+     * @return \Cake\Http\Response|null|void Renders view
+     */
+    public function getRealizadasByActividad() {
+        $actividad_id = $this->request->getParam('actividad_id');
+        $tareas = $this->Tareas->find()
+            ->contain(['Intersecciones', 'TareasTrabajadoresDetalles' => ['Trabajadores']])
+            ->order(['Tareas.fecha_realizada' => 'ASC'])
+            ->where(['Tareas.actividad_id' => $actividad_id, 'Tareas.estado_id' => 3]);
+
+        $this->set(compact('tareas'));
+        $this->viewBuilder()->setOption('serialize', true);
+    }
+    
     /**
      * View method
      *

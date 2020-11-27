@@ -35,13 +35,12 @@ class ActividadesTiposTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config): void
-    {
+    public function initialize(array $config): void {
         parent::initialize($config);
 
         $this->setTable('actividades_tipos');
-        $this->setDisplayField('id');
-        $this->setPrimaryKey(['id', 'estado_id']);
+        $this->setDisplayField('descripcion');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Estados', [
             'foreignKey' => 'estado_id',
@@ -55,8 +54,7 @@ class ActividadesTiposTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator): Validator
-    {
+    public function validationDefault(Validator $validator): Validator {
         $validator
             ->integer('id')
             ->allowEmptyString('id', null, 'create');
@@ -77,8 +75,7 @@ class ActividadesTiposTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): RulesChecker
-    {
+    public function buildRules(RulesChecker $rules): RulesChecker {
         $rules->add($rules->existsIn(['estado_id'], 'Estados'), ['errorField' => 'estado_id']);
 
         return $rules;

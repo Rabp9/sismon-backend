@@ -58,7 +58,120 @@ $routes->setRouteClass(DashedRoute::class);
 $routes->scope('/api', function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
    
-    $routes->resources('Intersecciones');
-    $routes->resources('Trabajos');
-    $routes->fallbacks(DashedRoute::class);
+    $routes->resources('Intersecciones', [
+        'map' => [
+            'disable' => [
+                'action' => 'disable',
+                'method' => 'POST'
+            ],
+            'enable' => [
+                'action' => 'enable',
+                'method' => 'POST'
+            ],
+            'getEnabled' => [
+                'action' => 'getEnabled',
+                'method' => 'GET'
+            ],
+            'getWithActividades' => [
+                'action' => 'getWithActividades',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
+    $routes->resources('Actividades', [
+        'map' => [
+            ':actividadesTipoId/getPendientes' => [
+                'action' => 'getPendientes',
+                'method' => 'GET'
+            ],
+            'report' => [
+                'action' => 'report',
+                'method' => 'POST'
+            ],
+            'disable' => [
+                'action' => 'disable',
+                'method' => 'POST'
+            ],
+            'enable' => [
+                'action' => 'enable',
+                'method' => 'POST'
+            ],
+            'register' => [
+                'action' => 'register',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
+    $routes->resources('ActividadesTipos', [
+        'map' => [
+            'getList' => [
+                'action' => 'getList',
+                'method' => 'GET'
+            ],
+            'enable' => [
+                'action' => 'enable',
+                'method' => 'POST'
+            ],
+            'disable' => [
+                'action' => 'disable',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
+    $routes->resources('Trabajadores', [
+        'map' => [
+            'getList' => [
+                'action' => 'getList',
+                'method' => 'GET'
+            ],
+            'enable' => [
+                'action' => 'enable',
+                'method' => 'POST'
+            ],
+            'disable' => [
+                'action' => 'disable',
+                'method' => 'POST'
+            ],
+            'getWithoutUser' => [
+                'action' => 'getWithoutUser',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
+    $routes->resources('Tareas', [
+        'map' => [
+            'getPendientesByActividad/:actividad_id' => [
+                'action' => 'getPendientesByActividad',
+                'method' => 'GET'
+            ],
+            'getRealizadasByActividad/:actividad_id' => [
+                'action' => 'getRealizadasByActividad',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
+    $routes->resources('Trabajos', [
+        'map' => [
+            'register' => [
+                'action' => 'register',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
+    $routes->resources('Users', [
+        'map' => [
+            'login' => [
+                'action' => 'login',
+                'method' => 'POST'
+            ],
+            'enable' => [
+                'action' => 'enable',
+                'method' => 'POST'
+            ],
+            'disable' => [
+                'action' => 'disable',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
 });

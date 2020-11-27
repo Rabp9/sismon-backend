@@ -23,7 +23,7 @@ class EstadosFixture extends TestFixture
         ],
         [
             "descripcion" => "Realizado",
-            "entidad" => "Tarea"
+            "entidad" => "Tarea,Actividad"
         ]
     ];
 }

@@ -47,6 +47,7 @@ class TrabajadoresTable extends Table
             'foreignKey' => 'estado_id',
             'joinType' => 'INNER',
         ]);
+        $this->hasOne('Users')->setForeignKey('trabajador_id');
     }
 
     /**

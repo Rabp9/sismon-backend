@@ -47,6 +47,8 @@ class InterseccionesTable extends Table
             'foreignKey' => 'estado_id',
             'joinType' => 'INNER',
         ]);
+        $this->hasMany('ActividadesInterseccionesDetalles')
+            ->setForeignKey('interseccion_id');
     }
 
     /**

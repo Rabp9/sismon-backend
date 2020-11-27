@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-
+use Cake\Utility\Hash;
+use Cake\I18n\Number;
 /**
  * Actividad Entity
  *
@@ -36,9 +37,30 @@ class Actividad extends Entity
         'descripcion' => true,
         'fecha_registro' => true,
         'actividades_tipo' => true,
+        'actividades_tipo_id' => true,
         'user' => true,
+        'user_id' => true,
         'trabajador' => true,
+        'trabajador_id' => true,
         'estado' => true,
         'estado_id' => true,
+        'id' => true
     ];
+    
+    protected $_virtual = ['porcentaje'];
+    
+    protected function _getPorcentaje() {
+        if (isset($this->tareas)) {
+            if (sizeof($this->tareas) == 0) {
+                return Number::precision(0, 2);
+            }
+            $total = sizeof($this->tareas);
+            $tareasRealizadas = Hash::extract($this->tareas, '{n}[estado_id=3].id');
+            $totalRealizadas = sizeof($tareasRealizadas);
+            
+            $porcentaje = $totalRealizadas * 100 / $total;
+            return Number::precision($porcentaje, 2);
+        }
+        return '';
+    }
 }

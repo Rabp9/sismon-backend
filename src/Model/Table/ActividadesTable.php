@@ -16,6 +16,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\TrabajadoresTable&\Cake\ORM\Association\BelongsTo $Trabajadores
  * @property \App\Model\Table\EstadosTable&\Cake\ORM\Association\BelongsTo $Estados
  * @property \App\Model\Table\ActividadesInterseccionesDetallesTable&\Cake\ORM\Association\HasMany $ActividadesInterseccionesDetalles
+ * @property \App\Model\Table\Tareas&\Cake\ORM\Association\HasMany $Tareas
  *
  * @method \App\Model\Entity\Actividad newEmptyEntity()
  * @method \App\Model\Entity\Actividad newEntity(array $data, array $options = [])
@@ -55,16 +56,19 @@ class ActividadesTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
         ]);
-        $this->belongsTo('Trabajadores', [
-            'foreignKey' => 'trabajador_id',
-            'joinType' => 'INNER',
-        ]);
+        $this->belongsTo('Trabajadores')->setForeignKey('trabajador_id')
+            ->setJoinType('INNER')->setProperty('trabajador');
+        
         $this->belongsTo('Estados', [
             'foreignKey' => 'estado_id',
             'joinType' => 'INNER',
         ]);
         
         $this->hasMany('ActividadesInterseccionesDetalles', [
+            'foreignKey' => 'actividad_id'
+        ]);
+        
+        $this->hasMany('Tareas', [
             'foreignKey' => 'actividad_id'
         ]);
     }

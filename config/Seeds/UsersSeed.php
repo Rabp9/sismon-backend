@@ -18,14 +18,15 @@ class UsersSeed extends AbstractSeed
      *
      * @return void
      */
-        public function run() {
+    public function run() {
         $faker = Faker\Factory::create();
         $data = [];
+        $hasher = new DefaultPasswordHasher();
         
         for ($i = 0; $i < 4; $i++) {
             $data[] = [
                 'username' =>  $faker->userName,
-                'password' => $faker->password,
+                'password' => $hasher->hash('12345678'),
                 'trabajador_id' => $faker->numberBetween(1, 10),
                 'estado_id' => 1
             ];
@@ -34,7 +35,7 @@ class UsersSeed extends AbstractSeed
         for ($i = 0; $i < 6; $i++) {
             $data[] = [
                 'username' =>  $faker->userName,
-                'password' => $faker->password,
+                'password' => $hasher->hash('12345678'),
                 'trabajador_id' => null,
                 'estado_id' => 1
             ];
@@ -43,7 +44,7 @@ class UsersSeed extends AbstractSeed
         for ($i = 0; $i < 5; $i++) {
             $data[] = [
                 'username' =>  $faker->userName,
-                'password' => $faker->password,
+                'password' => $hasher->hash('12345678'),
                 'trabajador_id' => null,
                 'estado_id' => 2
             ];

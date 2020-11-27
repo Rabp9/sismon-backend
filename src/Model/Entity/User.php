@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\Auth\DefaultPasswordHasher;
 
 /**
  * User Entity
@@ -14,7 +15,7 @@ use Cake\ORM\Entity;
  * @property int|null $trabajador_id
  * @property int $estado_id
  *
- * @property \App\Model\Entity\Trabajadore $trabajadore
+ * @property \App\Model\Entity\Trabajador $trabajador
  * @property \App\Model\Entity\Estado $estado
  */
 class User extends Entity
@@ -32,8 +33,9 @@ class User extends Entity
         'username' => true,
         'password' => true,
         'trabajador_id' => true,
-        'trabajadore' => true,
+        'trabajador' => true,
         'estado' => true,
+        'estado_id' => true
     ];
 
     /**
@@ -44,4 +46,10 @@ class User extends Entity
     protected $_hidden = [
         'password',
     ];
+    
+    // Automatically hash passwords when they are changed.
+    protected function _setPassword(string $password) {
+        $hasher = new DefaultPasswordHasher();
+        return $hasher->hash($password);
+    }
 }

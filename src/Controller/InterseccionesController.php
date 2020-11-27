@@ -7,7 +7,7 @@ namespace App\Controller;
  * Intersecciones Controller
  *
  * @property \App\Model\Table\InterseccionesTable $Intersecciones
- * @method \App\Model\Entity\Interseccione[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method \App\Model\Entity\Interseccion[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class InterseccionesController extends AppController
 {
@@ -17,20 +17,46 @@ class InterseccionesController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function index() {
-        $this->request->allowMethod(['GET']);
-        $intersecciones = $this->Intersecciones->find();
+        $search = $this->request->getQuery('search');
+        $estado_id = $this->request->getQuery('estado_id');
+        $itemsPerPage = $this->request->getQuery('itemsPerPage');
+        
+        $query = $this->Intersecciones->find()->order(['id']);
 
-        $this->set(compact('intersecciones'));
+        if ($search) {
+            $query->where(['OR' => [
+                'Intersecciones.descripcion LIKE' => '%' . $search . '%',
+                'Intersecciones.codigo LIKE' => '%' . $search . '%',
+            ]]);
+        }
+        
+        if ($estado_id) {
+            $query->where(['Intersecciones.estado_id' => $estado_id]);
+        }
+        
+        $count = $query->count();
+        if (!$itemsPerPage) {
+            $itemsPerPage = $count;
+        }
+        $intersecciones = $this->paginate($query, [
+            'limit' => $itemsPerPage
+        ]);
+        $paginate = $this->request->getAttribute('paging')['Intersecciones'];
+        $pagination = [
+            'totalItems' => $paginate['count'],
+            'itemsPerPage' =>  $paginate['perPage']
+        ];
+        
+        $this->set(compact('intersecciones', 'pagination', 'count'));
         $this->viewBuilder()->setOption('serialize', true);
     }
 
     /**
-     * getEnabled method
+     * GetEnabled method
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function getEnabled() {
-        $this->request->allowMethod(['GET']);
         $intersecciones = $this->Intersecciones->find()
             ->where(['estado_id' => 1]);
 
@@ -39,14 +65,37 @@ class InterseccionesController extends AppController
     }
 
     /**
-     * getDisabled method
+     * GetDisabled method
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function getDisabled() {
-        $this->request->allowMethod(['GET']);
         $intersecciones = $this->Intersecciones->find()
             ->where(['estado_id' => 2]);
+
+        $this->set(compact('intersecciones'));
+        $this->viewBuilder()->setOption('serialize', true);
+    }
+
+    /**
+     * GetWithActividades method
+     *
+     * @return \Cake\Http\Response|null|void Renders view
+     */
+    public function getWithActividades() {
+        $intersecciones = $this->Intersecciones->find()
+            ->contain([
+                'ActividadesInterseccionesDetalles' => [
+                    'Actividades' => function(\Cake\ORM\Query $q) {
+                        return $q
+                            ->where(['Actividades.estado_id IN' => [1, 3]])
+                            ->contain(['Tareas' =>  function (\Cake\ORM\Query $q) {
+                                return $q->where(['Tareas.estado_id IN' => [1, 3]]);
+                            }]);
+                    }
+                ]
+            ])
+            ->where(['Intersecciones.estado_id' => 1]);
 
         $this->set(compact('intersecciones'));
         $this->viewBuilder()->setOption('serialize', true);
@@ -60,7 +109,6 @@ class InterseccionesController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null) {
-        $this->request->allowMethod(['GET']);
         $interseccion = $this->Intersecciones->get($id);
 
         $this->set(compact('interseccion'));
@@ -73,8 +121,9 @@ class InterseccionesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
     public function add() {
-        $this->request->allowMethod("POST");
+        $this->request->allowMethod('POST');
         $interseccion = $this->Intersecciones->newEntity($this->request->getData());
+        $interseccion->estado_id = 1;
 
         if ($this->Intersecciones->save($interseccion)) {
             $message = 'La intersección fue registrada correctamente';
@@ -115,7 +164,7 @@ class InterseccionesController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function enable() {
-        $this->request->allowMethod(['POST']);
+        $this->request->allowMethod('POST');
         $id = $this->request->getData('id');
         $interseccion = $this->Intersecciones->get($id);
         $interseccion->estado_id = 1;
@@ -138,7 +187,7 @@ class InterseccionesController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function disable() {
-        $this->request->allowMethod(['POST']);
+        $this->request->allowMethod('POST');
         $id = $this->request->getData('id');
         $interseccion = $this->Intersecciones->get($id);
         $interseccion->estado_id = 2;

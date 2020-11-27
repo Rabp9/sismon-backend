@@ -30,7 +30,7 @@ class EstadosSeed extends AbstractSeed
             ],
             [
                 'descripcion' => 'Realizado',
-                'entidad' => 'Tarea'
+                'entidad' => 'Tarea,Actividad'
             ]
         ];
         

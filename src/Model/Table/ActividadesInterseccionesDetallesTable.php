@@ -43,14 +43,13 @@ class ActividadesInterseccionesDetallesTable extends Table
         $this->setDisplayField('fecha_registro');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('Actividades', [
-            'foreignKey' => 'actividad_id',
-            'joinType' => 'INNER',
-        ]);
-        $this->belongsTo('Intersecciones', [
-            'foreignKey' => 'interseccion_id',
-            'joinType' => 'INNER',
-        ]);
+        $this->belongsTo('Actividades')
+            ->setForeignKey('actividad_id')->setJoinType('INNER')
+            ->setProperty('actividad');
+        
+        $this->belongsTo('Intersecciones')
+            ->setForeignKey('interseccion_id')->setJoinType('INNER')
+            ->setProperty('interseccion');
     }
 
     /**

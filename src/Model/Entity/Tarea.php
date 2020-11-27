@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\Utility\Hash;
 
 /**
  * Tarea Entity
@@ -50,6 +51,17 @@ class Tarea extends Entity
         'trabajo_id' => true,
         'interseccion_id' => true,
         'actividad_id' => true,
-        'estado_id' => true
+        'estado_id' => true,
+        'id' => true
     ];
+    
+    protected $_virtual = ['trabajadoresInvolucrados'];
+    
+    protected function _getTrabajadoresInvolucrados() {
+        if (isset($this->tareas_trabajadores_detalles)) {
+            $trabajadoresFullNames = Hash::extract($this->tareas_trabajadores_detalles, '{n}.trabajador.fullName');
+            return implode('; ', $trabajadoresFullNames);
+        }
+        return '';
+    }
 }

@@ -35,4 +35,10 @@ class Trabajador extends Entity
         'dni' => true,
         'estado' => true,
     ];
+    
+    protected $_virtual = ['fullName'];
+    
+    protected function _getFullName() {
+        return $this->apellido_paterno . ' ' . $this->apellido_materno . ', ' . $this->nombres;
+    }
 }

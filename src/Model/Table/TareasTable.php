@@ -52,9 +52,9 @@ class TareasTable extends Table
         $this->belongsTo('Trabajos', [
             'foreignKey' => 'trabajo_id',
         ]);
-        $this->belongsTo('Intersecciones', [
-            'foreignKey' => 'interseccion_id',
-        ]);
+        $this->belongsTo('Intersecciones')->setForeignKey('interseccion_id')
+            ->setProperty('interseccion');
+        
         $this->belongsTo('Estados', [
             'foreignKey' => 'estado_id',
             'joinType' => 'INNER'
